@@ -5,6 +5,7 @@
 
 body {
   background-color: #ffffff !important;
+  height: 100%;
 }
 .nav-link.active {
   color: #f79f1a !important;
@@ -27,4 +28,7 @@ body {
     background-position: 0% 100%; /* Adjust position of background image */
     text-shadow: 0.5px 0.5px 2px rgba(171, 225, 10, 0.818); /* Add outline using text-shadow */
   }
+}
+.dashboard-h {
+  height: 50vh !important;
 }

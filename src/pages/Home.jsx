@@ -8,6 +8,7 @@ import About from '../components/home/About';
 import Community from '../components/home/Community';
 import PopularMenu from '../components/home/PopularMenu';
 import { Link } from 'react-router-dom';
+import { GrLinkTop } from 'react-icons/gr';
 
 const Home = () => {
   const [heart, setHeart] = useState(false);
@@ -18,9 +19,42 @@ const Home = () => {
   const heartHandler2 = () => {
     setHeart2(!heart2);
   };
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Function to scroll to the top of the page
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Smooth scrolling effect
+    });
+  };
+
+  // Function to toggle visibility of the button based on scroll position
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      // Adjust the value as needed for when to show the button
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  // Add scroll event listener to toggle button visibility
+  window.addEventListener('scroll', toggleVisibility);
   return (
     <Layout>
+      <div>
+        {isVisible && (
+          <button
+            className="z-50 fixed bottom-16 right-4 bg-yellow-500 text-white px-3 py-2 rounded-md"
+            onClick={scrollToTop}
+          >
+            <GrLinkTop className="w-6 h-8 text-white " />
+          </button>
+        )}
+      </div>
       {/* Hero Section */}
+
       <div className=" hero-section flex justify-around items-center pt-10">
         <div>
           <h1 className="text-5xl font-bold mb-4">

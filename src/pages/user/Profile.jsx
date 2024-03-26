@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Layout from '../components/Layout';
-import { MdOutlineModeEdit } from 'react-icons/md';
+import Layout from '../../components/Layout';
 import { MdAccessTimeFilled } from 'react-icons/md';
 import { FaUser } from 'react-icons/fa';
 import { BsBarChartFill } from 'react-icons/bs';
 import { FaCrown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { FaHeart } from 'react-icons/fa6';
 
 const Profile = () => {
   const [bio, setBio] = useState('');
@@ -86,21 +86,13 @@ const Profile = () => {
             </div>
             <div className="w-full">
               <h3 className="mb-4">Vrishruti Thapa</h3>
-              <div className="relative w-full md:w-1/2 lg:w-1/3">
+              <div className=" w-full md:w-1/2 lg:w-1/3">
                 <textarea
                   id="bioInput"
-                  disabled={!editBio}
                   value={bio}
                   onChange={handleBioChange}
-                  className="w-full h-12 px-4 py-2 mt-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:border-blue-500"
+                  className="w-full h-12 px-4  py-2 mt-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:border-blue-500"
                   placeholder="Tell us about yourself..."
-                />
-
-                <MdOutlineModeEdit
-                  onClick={() => {
-                    setEditBio(true);
-                  }}
-                  className="absolute top-1/2 right-4 transform -translate-y-1/2   w-6 h-6 cursor-pointer"
                 />
               </div>
             </div>
@@ -117,7 +109,7 @@ const Profile = () => {
         <div className="mt-12">
           <div className="flex justify-between items-center mb-10">
             <h2 className="font-semibold text-2xl">My Favourites</h2>
-            <Link to="/profile/favourites">
+            <Link to="/user/profile/favourites">
               <button className="px-6 py-2 bg-yellowColor-0 text-white rounded-md">
                 View All
               </button>
@@ -125,35 +117,39 @@ const Profile = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
             {favorites.map((item) => (
-              <div key={item.id} className="shadow-lg border ">
+              <div key={item.id} className="shadow-lg border relative">
                 <div>
                   <figure>
-                    <div
-                      className="w-full h-[40vh] relative no-repeat bg-cover"
-                      style={{ backgroundImage: `url(${item.image})` }}
-                    >
-                      {/* Absolutely positioned container */}
-                      <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                        <p className="flex items-center">
-                          <MdAccessTimeFilled className="mr-1" />
-                          <span>{item.time} Mins</span>
-                        </p>
-                        <p className="flex items-center">
-                          <FaUser className="mr-1" />
-                          <span>{item.serving} Servings</span>
-                        </p>
-                        <p className="flex items-center">
-                          <BsBarChartFill className="mr-1" />
-                          <span>{item.difficulty}</span>
-                        </p>
+                    <Link to="/recipe">
+                      <div
+                        className="w-full h-[40vh] relative no-repeat bg-cover"
+                        style={{ backgroundImage: `url(${item.image})` }}
+                      >
+                        {/* Absolutely positioned container */}
+                        <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                          <p className="flex items-center">
+                            <MdAccessTimeFilled className="mr-1" />
+                            <span>{item.time} Mins</span>
+                          </p>
+                          <p className="flex items-center">
+                            <FaUser className="mr-1" />
+                            <span>{item.serving} Servings</span>
+                          </p>
+                          <p className="flex items-center">
+                            <BsBarChartFill className="mr-1" />
+                            <span>{item.difficulty}</span>
+                          </p>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   </figure>
 
                   {/* Content below the image */}
                   <div className="bg-white px-6 rounded-lg pb-4 pt-6">
                     <div className="flex justify-between">
-                      <h3 className="text-2xl font-semibold">{item.name}</h3>
+                      <Link to="/recipe">
+                        <h3 className="text-2xl font-semibold">{item.name}</h3>
+                      </Link>
                       {item.premium && (
                         <FaCrown className="text-yellowColor-0 w-8 h-8" />
                       )}
@@ -165,6 +161,7 @@ const Profile = () => {
                     </Link>
                   </div>
                 </div>
+                <FaHeart className=" absolute top-4 right-4 w-8 h-8 text-red-500 cursor-pointer" />
               </div>
             ))}
           </div>{' '}

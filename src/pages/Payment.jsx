@@ -22,13 +22,7 @@ const Payment = () => {
         console.log('widget is closing');
       },
     },
-    paymentPreference: [
-      'KHALTI',
-      'EBANKING',
-      'MOBILE_BANKING',
-      'CONNECT_IPS',
-      'SCT',
-    ],
+    paymentPreference: ['KHALTI'],
   };
 
   // Create a new instance of KhaltiCheckout with the configuration

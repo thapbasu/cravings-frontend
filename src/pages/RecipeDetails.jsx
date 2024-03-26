@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { IoStarSharp } from 'react-icons/io5';
 import { PiStarFourFill } from 'react-icons/pi';
 import { IoIosStar } from 'react-icons/io';
@@ -12,6 +12,8 @@ const RecipeDetails = () => {
   const [filteredRecipe, setFilteredRecipe] = useState([]);
   const [rating, setRating] = useState(0);
   const [showFavoriteModal, setShowFavouriteModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(isLoggedIn);
   const handleStarClick = (starIndex) => {
     setRating(starIndex + 1);
   };
@@ -240,6 +242,21 @@ const RecipeDetails = () => {
       {showFavoriteModal && (
         <FavouriteModal handleFavoriteModal={handleModal} />
       )}
+      {!isLoggedIn && showLogin && (
+        <div className="w-screen mx-0 h-screen  fixed">
+          <div className="max-w-lg w-full flex justify-center flex-col items-center shadow-2xl rounded-lg bg-gray-200  bg-opacity-85 h-[40vh] mx-auto px-6 gap-y-5">
+            <h1 className="font-extrabold text-3xl text-yellowColor-0">
+              You are not Logged in !
+            </h1>
+            <h2 className="text-xl font-semibold">Log in to rate the recipe</h2>
+            <Link to="/login">
+              <button className="bg-yellowColor-0 bg-opacity-1 font-semibold text-white px-4 py-2 rounded-lg">
+                Login now!
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
       <div className={`my-12 flex flex-col gap-y-3`}>
         <h1 className="font-bold text-2xl uppercase">{recipe.name}</h1>
         <div className="flex gap-x-1 items-center my-2 text-yellow-400">
@@ -270,8 +287,9 @@ const RecipeDetails = () => {
             Save
           </a>
           <a
-            href="#rating"
+            href={isLoggedIn && '#rating'}
             className="w-[80px] text-center h-auto py-2 shadow-lg"
+            onClick={() => setShowLogin(!showLogin)}
           >
             Rate
           </a>
@@ -281,7 +299,7 @@ const RecipeDetails = () => {
           <img
             src={recipe.image}
             alt=""
-            className="w-full h-[50vh] md:h-[70vh]"
+            className="w-full h-[50vh] md:h-[70vh] object-cover rounded-lg"
           />
         </div>
         <div>
@@ -457,7 +475,7 @@ const RecipeDetails = () => {
             </div>
           </div>{' '}
         </div>
-        <div className="my-6">
+        <form className="my-6">
           <h2 className="text-2xl font-semibold uppercase mb-6">Reviews</h2>
           <div
             id="rating"
@@ -482,10 +500,16 @@ const RecipeDetails = () => {
               id=""
               cols="30"
               rows="10"
-              className="border border-gray-400 resize-none rounded-md"
+              className=" mb-2 border border-gray-400 resize-none rounded-md"
             ></textarea>
+            <button
+              type="submit"
+              className="text-white bg-yellowColor-0 px-4 py-2 rounded-lg w-fit"
+            >
+              Submit
+            </button>
           </div>
-        </div>
+        </form>
       </div>
     </Layout>
   );

@@ -6,11 +6,36 @@ import { FaUser } from 'react-icons/fa';
 import { BsBarChartFill } from 'react-icons/bs';
 import { FaCrown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import RecipePremiumPopup from '../components/RecipePremiumPopup';
+import { GrLinkTop } from 'react-icons/gr';
 
 const Recipe = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Function to scroll to the top of the page
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Smooth scrolling effect
+    });
+  };
+
+  // Function to toggle visibility of the button based on scroll position
+  const toggleVisibility = () => {
+    if (window.pageYOffset > 300) {
+      // Adjust the value as needed for when to show the button
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
+    }
+  };
+
+  // Add scroll event listener to toggle button visibility
+  window.addEventListener('scroll', toggleVisibility);
   const [foodRecipe, setFoodRecipe] = useState('All');
   const [filteredRecipe, setFilteredRecipe] = useState([]);
   const [allRecipe, setAllRecipe] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
   const LatestRecipe = [
     {
       id: 1,
@@ -224,9 +249,20 @@ const Recipe = () => {
 
   return (
     <Layout>
+      <div>
+        {isVisible && (
+          <button
+            className="z-50 fixed bottom-16 right-4 bg-yellow-500 text-white px-3 py-2 rounded-md"
+            onClick={scrollToTop}
+          >
+            <GrLinkTop className="w-6 h-8 text-white " />
+          </button>
+        )}
+      </div>
       <div className=" mt-20">
         <div className="text-center w-2/3 flex gap-y-6 flex-col mx-auto mb-16">
           <div className="font-semibold text-xl">CRAVINGS &gt; RECIPES</div>
+
           <h1 className="font-bold text-3xl">Recipes</h1>
           <p>
             Discover mouthwatering recipes that'll make you a kitchen magician!
@@ -234,6 +270,10 @@ const Recipe = () => {
             dish here. Let's cook up some delicious memories together!
           </p>
         </div>
+        <div className="">
+          {showPopup && <RecipePremiumPopup setShowPopup={setShowPopup} />}
+        </div>
+
         <div className="relative mb-6">
           {' '}
           <input
@@ -247,7 +287,7 @@ const Recipe = () => {
           <h2 className="text-yellowColor-0 font-semibold text-3xl mb-4 text-center">
             Explore Recipes
           </h2>
-          <ul className="flex gap-x-6 justify-end ">
+          <ul className="gap-x-3 flex md:gap-x-6 justify-end ">
             <li
               onClick={() => setFoodRecipe('All')}
               className={`cursor-pointer ${
@@ -297,28 +337,59 @@ const Recipe = () => {
                   {LatestRecipe.map((item) => (
                     <div key={item.id} className="shadow-lg border ">
                       <div>
-                        <figure>
-                          <div
-                            className="w-full h-[40vh] relative no-repeat bg-cover"
-                            style={{ backgroundImage: `url(${item.image})` }}
-                          >
-                            {/* Absolutely positioned container */}
-                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                              <p className="flex items-center">
-                                <MdAccessTimeFilled className="mr-1" />
-                                <span>{item.time} Mins</span>
-                              </p>
-                              <p className="flex items-center">
-                                <FaUser className="mr-1" />
-                                <span>{item.serving} Servings</span>
-                              </p>
-                              <p className="flex items-center">
-                                <BsBarChartFill className="mr-1" />
-                                <span>{item.difficulty}</span>
-                              </p>
+                        {item.premium ? (
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </figure>
+                          </figure>
+                        ) : (
+                          <Link to={`/recipe/${item.id}`}>
+                            <figure onClick={() => setShowPopup(true)}>
+                              <div
+                                className="w-full h-[40vh] relative no-repeat bg-cover"
+                                style={{
+                                  backgroundImage: `url(${item.image})`,
+                                }}
+                              >
+                                {/* Absolutely positioned container */}
+                                <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                  <p className="flex items-center">
+                                    <MdAccessTimeFilled className="mr-1" />
+                                    <span>{item.time} Mins</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <FaUser className="mr-1" />
+                                    <span>{item.serving} Servings</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <BsBarChartFill className="mr-1" />
+                                    <span>{item.difficulty}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </figure>
+                          </Link>
+                        )}
 
                         {/* Content below the image */}
                         <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -327,14 +398,23 @@ const Recipe = () => {
                               {item.name}
                             </h3>
                             {item.premium && (
-                              <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                              <FaCrown
+                                onClick={() => {
+                                  setShowPopup(true);
+                                }}
+                                className="text-yellowColor-0 cursor-pointer w-8 h-8"
+                              />
                             )}
                           </div>
-                          <Link to={`/recipe/${item.id}`}>
-                            <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                              View Recipe
-                            </p>
-                          </Link>
+                          <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                            {item.premium ? (
+                              <p onClick={() => setShowPopup(true)}>
+                                View Recipe
+                              </p>
+                            ) : (
+                              <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                            )}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -347,28 +427,59 @@ const Recipe = () => {
                   {popularRecipe.map((item) => (
                     <div key={item.id} className="shadow-lg border ">
                       <div>
-                        <figure>
-                          <div
-                            className="w-full h-[40vh] relative no-repeat bg-cover"
-                            style={{ backgroundImage: `url(${item.image})` }}
-                          >
-                            {/* Absolutely positioned container */}
-                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                              <p className="flex items-center">
-                                <MdAccessTimeFilled className="mr-1" />
-                                <span>{item.time} Mins</span>
-                              </p>
-                              <p className="flex items-center">
-                                <FaUser className="mr-1" />
-                                <span>{item.serving} Servings</span>
-                              </p>
-                              <p className="flex items-center">
-                                <BsBarChartFill className="mr-1" />
-                                <span>{item.difficulty}</span>
-                              </p>
+                        {item.premium ? (
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </figure>
+                          </figure>
+                        ) : (
+                          <Link to={`/recipe/${item.id}`}>
+                            <figure onClick={() => setShowPopup(true)}>
+                              <div
+                                className="w-full h-[40vh] relative no-repeat bg-cover"
+                                style={{
+                                  backgroundImage: `url(${item.image})`,
+                                }}
+                              >
+                                {/* Absolutely positioned container */}
+                                <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                  <p className="flex items-center">
+                                    <MdAccessTimeFilled className="mr-1" />
+                                    <span>{item.time} Mins</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <FaUser className="mr-1" />
+                                    <span>{item.serving} Servings</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <BsBarChartFill className="mr-1" />
+                                    <span>{item.difficulty}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </figure>
+                          </Link>
+                        )}
 
                         {/* Content below the image */}
                         <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -377,14 +488,23 @@ const Recipe = () => {
                               {item.name}
                             </h3>
                             {item.premium && (
-                              <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                              <FaCrown
+                                onClick={() => {
+                                  setShowPopup(true);
+                                }}
+                                className="text-yellowColor-0 cursor-pointer w-8 h-8"
+                              />
                             )}
                           </div>{' '}
-                          <Link to={`/recipe/${item.id}`}>
-                            <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                              View Recipe
-                            </p>
-                          </Link>
+                          <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                            {item.premium ? (
+                              <p onClick={() => setShowPopup(true)}>
+                                View Recipe
+                              </p>
+                            ) : (
+                              <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                            )}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -397,28 +517,59 @@ const Recipe = () => {
                   {mostViewedRecipe.map((item) => (
                     <div key={item.id} className="shadow-lg border ">
                       <div>
-                        <figure>
-                          <div
-                            className="w-full h-[40vh] relative no-repeat bg-cover"
-                            style={{ backgroundImage: `url(${item.image})` }}
-                          >
-                            {/* Absolutely positioned container */}
-                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                              <p className="flex items-center">
-                                <MdAccessTimeFilled className="mr-1" />
-                                <span>{item.time} Mins</span>
-                              </p>
-                              <p className="flex items-center">
-                                <FaUser className="mr-1" />
-                                <span>{item.serving} Servings</span>
-                              </p>
-                              <p className="flex items-center">
-                                <BsBarChartFill className="mr-1" />
-                                <span>{item.difficulty}</span>
-                              </p>
+                        {item.premium ? (
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        </figure>
+                          </figure>
+                        ) : (
+                          <Link to={`/recipe/${item.id}`}>
+                            <figure onClick={() => setShowPopup(true)}>
+                              <div
+                                className="w-full h-[40vh] relative no-repeat bg-cover"
+                                style={{
+                                  backgroundImage: `url(${item.image})`,
+                                }}
+                              >
+                                {/* Absolutely positioned container */}
+                                <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                  <p className="flex items-center">
+                                    <MdAccessTimeFilled className="mr-1" />
+                                    <span>{item.time} Mins</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <FaUser className="mr-1" />
+                                    <span>{item.serving} Servings</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <BsBarChartFill className="mr-1" />
+                                    <span>{item.difficulty}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </figure>
+                          </Link>
+                        )}
 
                         {/* Content below the image */}
                         <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -427,14 +578,23 @@ const Recipe = () => {
                               {item.name}
                             </h3>
                             {item.premium && (
-                              <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                              <FaCrown
+                                onClick={() => {
+                                  setShowPopup(true);
+                                }}
+                                className="text-yellowColor-0 cursor-pointer  w-8 h-8"
+                              />
                             )}
                           </div>{' '}
-                          <Link to={`/recipe/${item.id}`}>
-                            <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                              View Recipe
-                            </p>
-                          </Link>
+                          <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                            {item.premium ? (
+                              <p onClick={() => setShowPopup(true)}>
+                                View Recipe
+                              </p>
+                            ) : (
+                              <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                            )}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -447,10 +607,106 @@ const Recipe = () => {
                   {filteredRecipe.map((item) => (
                     <div key={item.id} className="shadow-lg border ">
                       <div>
-                        <figure>
+                        {item.premium ? (
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </figure>
+                        ) : (
+                          <Link to={`/recipe/${item.id}`}>
+                            <figure onClick={() => setShowPopup(true)}>
+                              <div
+                                className="w-full h-[40vh] relative no-repeat bg-cover"
+                                style={{
+                                  backgroundImage: `url(${item.image})`,
+                                }}
+                              >
+                                {/* Absolutely positioned container */}
+                                <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                  <p className="flex items-center">
+                                    <MdAccessTimeFilled className="mr-1" />
+                                    <span>{item.time} Mins</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <FaUser className="mr-1" />
+                                    <span>{item.serving} Servings</span>
+                                  </p>
+                                  <p className="flex items-center">
+                                    <BsBarChartFill className="mr-1" />
+                                    <span>{item.difficulty}</span>
+                                  </p>
+                                </div>
+                              </div>
+                            </figure>
+                          </Link>
+                        )}
+
+                        {/* Content below the image */}
+                        <div className="bg-white px-6 rounded-lg pb-4 pt-6">
+                          <div className="flex justify-between">
+                            <h3 className="text-2xl font-semibold">
+                              {item.name}
+                            </h3>
+                            {item.premium && (
+                              <FaCrown
+                                onClick={() => {
+                                  setShowPopup(true);
+                                }}
+                                className="text-yellowColor-0 cursor-pointer  w-8 h-8"
+                              />
+                            )}
+                          </div>{' '}
+                          <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                            {item.premium ? (
+                              <p onClick={() => setShowPopup(true)}>
+                                View Recipe
+                              </p>
+                            ) : (
+                              <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>{' '}
+              </div>
+            </>
+          )}
+          {foodRecipe === 'breakfast' && (
+            <div className=" mt-14 md:mt-10 mb-10">
+              <h3 className="text-2xl font-bold mb-6">Breakfast Recipe</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
+                {BreakfastRecipes.map((item) => (
+                  <div key={item.id} className="shadow-lg border ">
+                    <div>
+                      {item.premium ? (
+                        <figure onClick={() => setShowPopup(true)}>
                           <div
-                            className="w-full h-[40vh] relative no-repeat bg-cover"
-                            style={{ backgroundImage: `url(${item.image})` }}
+                            className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                            style={{
+                              backgroundImage: `url(${item.image})`,
+                            }}
                           >
                             {/* Absolutely positioned container */}
                             <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
@@ -469,59 +725,34 @@ const Recipe = () => {
                             </div>
                           </div>
                         </figure>
-
-                        {/* Content below the image */}
-                        <div className="bg-white px-6 rounded-lg pb-4 pt-6">
-                          <div className="flex justify-between">
-                            <h3 className="text-2xl font-semibold">
-                              {item.name}
-                            </h3>
-                            {item.premium && (
-                              <FaCrown className="text-yellowColor-0 w-8 h-8" />
-                            )}
-                          </div>{' '}
-                          <Link to={`/recipe/${item.id}`}>
-                            <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                              View Recipe
-                            </p>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>{' '}
-              </div>
-            </>
-          )}
-          {foodRecipe === 'breakfast' && (
-            <div className="mb-10">
-              <h3 className="text-2xl font-bold mb-6">Breakfast Recipe</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
-                {BreakfastRecipes.map((item) => (
-                  <div key={item.id} className="shadow-lg border ">
-                    <div>
-                      <figure>
-                        <div
-                          className="w-full h-[40vh] relative no-repeat bg-cover"
-                          style={{ backgroundImage: `url(${item.image})` }}
-                        >
-                          {/* Absolutely positioned container */}
-                          <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                            <p className="flex items-center">
-                              <MdAccessTimeFilled className="mr-1" />
-                              <span>{item.time} Mins</span>
-                            </p>
-                            <p className="flex items-center">
-                              <FaUser className="mr-1" />
-                              <span>{item.serving} Servings</span>
-                            </p>
-                            <p className="flex items-center">
-                              <BsBarChartFill className="mr-1" />
-                              <span>{item.difficulty}</span>
-                            </p>
-                          </div>
-                        </div>
-                      </figure>
+                      ) : (
+                        <Link to={`/recipe/${item.id}`}>
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </figure>
+                        </Link>
+                      )}
 
                       {/* Content below the image */}
                       <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -530,14 +761,23 @@ const Recipe = () => {
                             {item.name}
                           </h3>
                           {item.premium && (
-                            <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                            <FaCrown
+                              onClick={() => {
+                                setShowPopup(true);
+                              }}
+                              className="text-yellowColor-0 cursor-pointer  w-8 h-8"
+                            />
                           )}
                         </div>
-                        <Link to={`/recipe/${item.id}`}>
-                          <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                            View Recipe
-                          </p>
-                        </Link>
+                        <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                          {item.premium ? (
+                            <p onClick={() => setShowPopup(true)}>
+                              View Recipe
+                            </p>
+                          ) : (
+                            <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -546,34 +786,65 @@ const Recipe = () => {
             </div>
           )}
           {foodRecipe === 'lunch' && (
-            <div className="mb-10">
+            <div className=" mt-14 md:mt-10 mb-10">
               <h3 className="text-2xl font-bold mb-6">Lunch Recipes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
                 {LunchRecipes.map((item) => (
                   <div key={item.id} className="shadow-lg border ">
                     <div>
-                      <figure>
-                        <div
-                          className="w-full h-[40vh] relative no-repeat bg-cover"
-                          style={{ backgroundImage: `url(${item.image})` }}
-                        >
-                          {/* Absolutely positioned container */}
-                          <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                            <p className="flex items-center">
-                              <MdAccessTimeFilled className="mr-1" />
-                              <span>{item.time} Mins</span>
-                            </p>
-                            <p className="flex items-center">
-                              <FaUser className="mr-1" />
-                              <span>{item.serving} Servings</span>
-                            </p>
-                            <p className="flex items-center">
-                              <BsBarChartFill className="mr-1" />
-                              <span>{item.difficulty}</span>
-                            </p>
+                      {item.premium ? (
+                        <figure onClick={() => setShowPopup(true)}>
+                          <div
+                            className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                            style={{
+                              backgroundImage: `url(${item.image})`,
+                            }}
+                          >
+                            {/* Absolutely positioned container */}
+                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                              <p className="flex items-center">
+                                <MdAccessTimeFilled className="mr-1" />
+                                <span>{item.time} Mins</span>
+                              </p>
+                              <p className="flex items-center">
+                                <FaUser className="mr-1" />
+                                <span>{item.serving} Servings</span>
+                              </p>
+                              <p className="flex items-center">
+                                <BsBarChartFill className="mr-1" />
+                                <span>{item.difficulty}</span>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </figure>
+                        </figure>
+                      ) : (
+                        <Link to={`/recipe/${item.id}`}>
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </figure>
+                        </Link>
+                      )}
 
                       {/* Content below the image */}
                       <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -582,14 +853,23 @@ const Recipe = () => {
                             {item.name}
                           </h3>
                           {item.premium && (
-                            <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                            <FaCrown
+                              onClick={() => {
+                                setShowPopup(true);
+                              }}
+                              className="text-yellowColor-0 cursor-pointer  w-8 h-8"
+                            />
                           )}
                         </div>
-                        <Link to={`/recipe/${item.id}`}>
-                          <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                            View Recipe
-                          </p>
-                        </Link>
+                        <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                          {item.premium ? (
+                            <p onClick={() => setShowPopup(true)}>
+                              View Recipe
+                            </p>
+                          ) : (
+                            <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -598,35 +878,65 @@ const Recipe = () => {
             </div>
           )}
           {foodRecipe === 'dinner' && (
-            <div className="mb-10">
+            <div className=" mt-14 md:mt-10 mb-10">
               <h3 className="text-2xl font-bold mb-6">Dinner Recipes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
                 {DinnerRecipes.map((item) => (
                   <div key={item.id} className="shadow-lg border ">
                     <div>
-                      <figure>
-                        <div
-                          className="w-full h-[40vh] relative no-repeat bg-cover"
-                          style={{ backgroundImage: `url(${item.image})` }}
-                        >
-                          {/* Absolutely positioned container */}
-                          <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                            <p className="flex items-center">
-                              <MdAccessTimeFilled className="mr-1" />
-                              <span>{item.time} Mins</span>
-                            </p>
-                            <p className="flex items-center">
-                              <FaUser className="mr-1" />
-                              <span>{item.serving} Servings</span>
-                            </p>
-                            <p className="flex items-center">
-                              <BsBarChartFill className="mr-1" />
-                              <span>{item.difficulty}</span>
-                            </p>
+                      {item.premium ? (
+                        <figure onClick={() => setShowPopup(true)}>
+                          <div
+                            className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                            style={{
+                              backgroundImage: `url(${item.image})`,
+                            }}
+                          >
+                            {/* Absolutely positioned container */}
+                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                              <p className="flex items-center">
+                                <MdAccessTimeFilled className="mr-1" />
+                                <span>{item.time} Mins</span>
+                              </p>
+                              <p className="flex items-center">
+                                <FaUser className="mr-1" />
+                                <span>{item.serving} Servings</span>
+                              </p>
+                              <p className="flex items-center">
+                                <BsBarChartFill className="mr-1" />
+                                <span>{item.difficulty}</span>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </figure>
-
+                        </figure>
+                      ) : (
+                        <Link to={`/recipe/${item.id}`}>
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </figure>
+                        </Link>
+                      )}
                       {/* Content below the image */}
                       <div className="bg-white px-6 rounded-lg pb-4 pt-6">
                         <div className="flex justify-between">
@@ -634,14 +944,18 @@ const Recipe = () => {
                             {item.name}
                           </h3>
                           {item.premium && (
-                            <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                            <FaCrown className="text-yellowColor-0 cursor-pointer  w-8 h-8" />
                           )}
                         </div>
-                        <Link to={`/recipe/${item.id}`}>
-                          <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                            View Recipe
-                          </p>
-                        </Link>
+                        <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                          {item.premium ? (
+                            <p onClick={() => setShowPopup(true)}>
+                              View Recipe
+                            </p>
+                          ) : (
+                            <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -650,34 +964,65 @@ const Recipe = () => {
             </div>
           )}
           {foodRecipe === 'desert' && (
-            <div className="mb-10">
+            <div className=" mt-14 md:mt-10 mb-10">
               <h3 className="text-2xl font-bold mb-6">Desert Recipes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 gap-y-8 md:gap-6 lg:gap-10">
                 {DessertRecipes.map((item) => (
                   <div key={item.id} className="shadow-lg border ">
                     <div>
-                      <figure>
-                        <div
-                          className="w-full h-[40vh] relative no-repeat bg-cover"
-                          style={{ backgroundImage: `url(${item.image})` }}
-                        >
-                          {/* Absolutely positioned container */}
-                          <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                            <p className="flex items-center">
-                              <MdAccessTimeFilled className="mr-1" />
-                              <span>{item.time} Mins</span>
-                            </p>
-                            <p className="flex items-center">
-                              <FaUser className="mr-1" />
-                              <span>{item.serving} Servings</span>
-                            </p>
-                            <p className="flex items-center">
-                              <BsBarChartFill className="mr-1" />
-                              <span>{item.difficulty}</span>
-                            </p>
+                      {item.premium ? (
+                        <figure onClick={() => setShowPopup(true)}>
+                          <div
+                            className="w-full h-[40vh] cursor-pointer relative no-repeat bg-cover"
+                            style={{
+                              backgroundImage: `url(${item.image})`,
+                            }}
+                          >
+                            {/* Absolutely positioned container */}
+                            <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                              <p className="flex items-center">
+                                <MdAccessTimeFilled className="mr-1" />
+                                <span>{item.time} Mins</span>
+                              </p>
+                              <p className="flex items-center">
+                                <FaUser className="mr-1" />
+                                <span>{item.serving} Servings</span>
+                              </p>
+                              <p className="flex items-center">
+                                <BsBarChartFill className="mr-1" />
+                                <span>{item.difficulty}</span>
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </figure>
+                        </figure>
+                      ) : (
+                        <Link to={`/recipe/${item.id}`}>
+                          <figure onClick={() => setShowPopup(true)}>
+                            <div
+                              className="w-full h-[40vh] relative no-repeat bg-cover"
+                              style={{
+                                backgroundImage: `url(${item.image})`,
+                              }}
+                            >
+                              {/* Absolutely positioned container */}
+                              <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                                <p className="flex items-center">
+                                  <MdAccessTimeFilled className="mr-1" />
+                                  <span>{item.time} Mins</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <FaUser className="mr-1" />
+                                  <span>{item.serving} Servings</span>
+                                </p>
+                                <p className="flex items-center">
+                                  <BsBarChartFill className="mr-1" />
+                                  <span>{item.difficulty}</span>
+                                </p>
+                              </div>
+                            </div>
+                          </figure>
+                        </Link>
+                      )}
 
                       {/* Content below the image */}
                       <div className="bg-white px-6 rounded-lg pb-4 pt-6">
@@ -686,14 +1031,23 @@ const Recipe = () => {
                             {item.name}
                           </h3>
                           {item.premium && (
-                            <FaCrown className="text-yellowColor-0 w-8 h-8" />
+                            <FaCrown
+                              onClick={() => {
+                                setShowPopup(true);
+                              }}
+                              className="text-yellowColor-0 cursor-pointer  w-8 h-8"
+                            />
                           )}
                         </div>
-                        <Link to={`/recipe/${item.id}`}>
-                          <p className="text-yellowColor-0 underline underline-yellow-0 cursor-pointer">
-                            View Recipe
-                          </p>
-                        </Link>
+                        <p className="text-yellowColor-0 inline-block underline underline-yellow-0 cursor-pointer">
+                          {item.premium ? (
+                            <p onClick={() => setShowPopup(true)}>
+                              View Recipe
+                            </p>
+                          ) : (
+                            <Link to={`/recipe/${item.id}`}>View Recipe</Link>
+                          )}
+                        </p>
                       </div>
                     </div>
                   </div>

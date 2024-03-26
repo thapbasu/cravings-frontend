@@ -107,7 +107,7 @@ const Header = () => {
               </li>
             </ul>
           </div>
-          <a className="btn btn-ghost text-xl md:text-2xl ml-[-6px] md:ml-0 tracking-normal md:tracking-wide font-heading mt-1 text-greenColor-0">
+          <a className=" font-bold text-xl md:text-2xl ml-[-6px] md:ml-0 tracking-normal md:tracking-wide font-heading mt-1 text-greenColor-0">
             <Link to="/">CRAVINGS</Link>
           </a>
         </div>
@@ -135,7 +135,7 @@ const Header = () => {
             <li>
               <details>
                 <summary className="font-bold nav-link">Category</summary>
-                <ul className="p-2 w-40 flex items-center flex-col">
+                <ul className="p-2 w-40">
                   <li>
                     <NavLink
                       to="/categories/north-indian" // Corrected path
@@ -216,7 +216,7 @@ const Header = () => {
                   <FaUser className="nav-link w-5 h-5" />
                 </div>
               ) : (
-                <div className="nav-link indicator text-lg font-semibold border border-b-2  border-greenColor-0 border-x-0 border-t-0">
+                <div className="nav-link indicator text-lg font-semibold">
                   {/* <FaUser className="nav-link w-5 h-5" /> */}
                   Login
                 </div>

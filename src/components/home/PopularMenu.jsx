@@ -44,26 +44,28 @@ const PopularMenu = () => {
           <div key={item.id} className="shadow-lg border ">
             <div>
               <figure>
-                <div
-                  className="w-full h-[40vh] relative no-repeat bg-cover"
-                  style={{ backgroundImage: `url(${item.image})` }}
-                >
-                  {/* Absolutely positioned container */}
-                  <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
-                    <p className="flex items-center">
-                      <MdAccessTimeFilled className="mr-1" />
-                      <span>{item.time} Mins</span>
-                    </p>
-                    <p className="flex items-center">
-                      <FaUser className="mr-1" />
-                      <span>{item.serving} Servings</span>
-                    </p>
-                    <p className="flex items-center">
-                      <BsBarChartFill className="mr-1" />
-                      <span>{item.difficulty}</span>
-                    </p>
+                <Link to={`/recipe/${item.id}`}>
+                  <div
+                    className="w-full h-[40vh] relative no-repeat bg-cover"
+                    style={{ backgroundImage: `url(${item.image})` }}
+                  >
+                    {/* Absolutely positioned container */}
+                    <div className="absolute bottom-0 flex justify-between items-center p-2 px-1 md:px-6 opacity-75 bg-gray-50 w-full text-greenColor-0 font-semibold capitalize">
+                      <p className="flex items-center">
+                        <MdAccessTimeFilled className="mr-1" />
+                        <span>{item.time} Mins</span>
+                      </p>
+                      <p className="flex items-center">
+                        <FaUser className="mr-1" />
+                        <span>{item.serving} Servings</span>
+                      </p>
+                      <p className="flex items-center">
+                        <BsBarChartFill className="mr-1" />
+                        <span>{item.difficulty}</span>
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </figure>
 
               {/* Content below the image */}

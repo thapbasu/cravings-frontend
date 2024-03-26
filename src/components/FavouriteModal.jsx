@@ -1,5 +1,6 @@
 import React from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 
 const FavouriteModal = ({ handleFavoriteModal }) => {
   return (
@@ -20,9 +21,11 @@ const FavouriteModal = ({ handleFavoriteModal }) => {
           member.
         </p>
         <div className="flex justify-center">
-          <button className="uppercase text-white bg-yellowColor-0 px-6 py-2 rounded-md font-semibold">
-            Join now
-          </button>
+          <Link to="/payment">
+            <button className="uppercase text-white bg-yellowColor-0 px-6 py-2 rounded-md font-semibold">
+              Join now
+            </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -20,7 +20,13 @@ const ChefsList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {chefs.map((chef) => (
             <div key={chef.id} className="w-100 h-100 shadow-lg rounded-lg">
-              <img src={chef.image} className="w-full h-[40vh]" alt="" />
+              <Link to={`/chefs/${chef.id}`}>
+                <img
+                  src={chef.image}
+                  className="w-full h-[40vh] rounded-lg object-cover"
+                  alt=""
+                />
+              </Link>
               <div className="px-6 py-4">
                 <Link to={`/chefs/${chef.id}`}>
                   <h2 className="inline-block font-semibold text-lg cursor-pointer">

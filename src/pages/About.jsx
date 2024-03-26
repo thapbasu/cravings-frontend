@@ -1,13 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Layout from '../components/Layout';
+import { useLocation } from 'react-router-dom';
 
 const About = () => {
+  const location = useLocation();
+  console.log(location.pathname);
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    // Check if there's a hash in the URL
+    const hash = window.location.hash;
+    if (hash) {
+      // Scroll to the element with the corresponding id
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location.hash]);
   return (
     <Layout>
-      <div className="my-12">
+      <div className="my-12" id="aboutPart">
         <h1 className="font-bold text-3xl text-center">About Cravings</h1>
         <div className="mb-10">
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 my-10">
@@ -97,15 +111,12 @@ const About = () => {
             </p>{' '}
           </div>
         </div>
-        <div>
+        <div id="contact">
           <h2 className="font-semibold text-3xl text-center uppercase">
             Contact Us
           </h2>
 
-          <div
-            id="contact"
-            className="bg-[#F1F3F7] w-full lg:w-1/2 h-[85vh] md:h-[80vh] mx-auto px-8 py-6 lg:px-16 lg:py-16 rounded-lg shadow-lg my-12"
-          >
+          <div className="bg-[#F1F3F7] w-full lg:w-1/2 h-[85vh] md:h-[80vh] mx-auto px-8 py-6 lg:px-16 lg:py-16 rounded-lg shadow-lg my-12">
             <form
               onSubmit={handleSubmit}
               className="flex justify-center h-full flex-col"
