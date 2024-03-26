@@ -3,7 +3,11 @@ import Layout from '../../components/chef/Layout';
 import { IoCloseSharp } from 'react-icons/io5';
 
 const EditRecipe = ({ id, showEditRecipe }) => {
-  console.log('test', id);
+  const [premiumStatus, setPremiumStatus] = useState('notPremium');
+
+  const handlePremiumChange = (e) => {
+    setPremiumStatus(e.target.value);
+  };
   const [recipes, setRecipes] = useState([
     {
       id: 1,
@@ -136,7 +140,7 @@ const EditRecipe = ({ id, showEditRecipe }) => {
       <h1 className="text-2xl ml-6 mt-6 font-bold text-yellowColor-0 mb-8">
         Edit Recipes
       </h1>
-      <form onSubmit={handleSubmit} className=" w-[85%] h-[85vh]">
+      <form onSubmit={handleSubmit} className=" w-[85%] h-[90vh]">
         <div className="w-[100%]  overflow-hidden flex flex-col gap-y-1 h-full justify-center  bg-white px-10 py-10 rounded-lg ">
           <div className="w-full flex justify-end">
             <p
@@ -145,7 +149,7 @@ const EditRecipe = ({ id, showEditRecipe }) => {
                 showEditRecipe(false);
               }}
             >
-              <IoCloseSharp className=" mt-7 w-9 h-9 " />
+              <IoCloseSharp className="w-9 h-9 " />
             </p>
           </div>
 
@@ -207,6 +211,33 @@ const EditRecipe = ({ id, showEditRecipe }) => {
                 onChange={handleImageChange}
               />
             </label>
+          </div>
+          <div className="mt-1 mb-2 relative">
+            <select
+              id="premium"
+              name="premium"
+              value={premiumStatus}
+              onChange={handlePremiumChange}
+              className="block appearance-none w-full bg-white border border-gray-400 text-gray-700 py-2 px-3 pr-8 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="notPremium">Not Premium</option>
+              <option value="premium">Premium</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 12l-8-8 1.5-1.5L10 9.8 16.5 3.5 18 5z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
           </div>
           <button
             type="Submit"
